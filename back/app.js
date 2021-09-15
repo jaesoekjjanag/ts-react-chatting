@@ -12,13 +12,14 @@ const ioServer = io(server, {
 })
 
 ioServer.on("connection", (socket) => {
-  socket.on("sendMessage", (msg) => {
-    console.log(msg)
-    socket.to('room').emit('paintMessage', msg)
+  socket.on("sendMessage", (msg, nickname) => {
+    console.log(nickname, msg)
+    socket.to('room').emit('paintMessage', msg, nickname)
   })
-  socket.on("enter", () => {
+  socket.on("enter", (nickname) => {
+    console.log(`${nickname}님이 입장하셨습니다.`)
     socket.join("room")
-    console.log('enterd')
+    socket.to('room').emit('alertMessage', `${nickname}님이 입장하셨습니다.`)
   })
 })
 
